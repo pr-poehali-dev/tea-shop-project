@@ -40,7 +40,7 @@ const Index = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Icon name="Leaf" size={32} className="text-green-700" />
-              <h1 className="text-3xl font-bold text-green-800">Чайная Лавка</h1>
+              <h1 className="text-3xl font-bold text-green-800">Золотой листок</h1>
             </div>
             <nav className="hidden md:flex space-x-8">
               <a href="#catalog" className="text-green-700 hover:text-green-900 transition-colors">Каталог</a>
