@@ -28,7 +28,11 @@ const Index = () => {
     { id: 3, name: 'Улун Те Гуань Инь', price: 1800, type: 'Улун', description: 'Изысканный китайский полуферментированный чай', image: '/img/8a2a86b9-c026-4aaa-a89b-ffdd5826e84d.jpg' },
     { id: 4, name: 'Ромашковый Вечер', price: 650, type: 'Травяной', description: 'Успокаивающий травяной чай с ромашкой', image: '/img/8a2a86b9-c026-4aaa-a89b-ffdd5826e84d.jpg' },
     { id: 5, name: 'Пуэр Шу', price: 2200, type: 'Пуэр', description: 'Выдержанный темный пуэр с глубоким вкусом', image: '/img/8a2a86b9-c026-4aaa-a89b-ffdd5826e84d.jpg' },
-    { id: 6, name: 'Белый Пион', price: 2800, type: 'Белый', description: 'Деликатный белый чай с тонким ароматом', image: '/img/8a2a86b9-c026-4aaa-a89b-ffdd5826e84d.jpg' }
+    { id: 6, name: 'Белый Пион', price: 2800, type: 'Белый', description: 'Деликатный белый чай с тонким ароматом', image: '/img/8a2a86b9-c026-4aaa-a89b-ffdd5826e84d.jpg' },
+    { id: 7, name: 'Лесные Ягоды', price: 950, type: 'Фруктовый', description: 'Черный чай с кусочками клубники, малины и черники', image: '/img/941583d3-fe53-4e4d-a242-62c00c2c3162.jpg' },
+    { id: 8, name: 'Тропический Микс', price: 1100, type: 'Фруктовый', description: 'Зеленый чай с ананасом, манго и папайей', image: '/img/941583d3-fe53-4e4d-a242-62c00c2c3162.jpg' },
+    { id: 9, name: 'Цитрусовая Свежесть', price: 850, type: 'Фруктовый', description: 'Белый чай с апельсином, лимоном и грейпфрутом', image: '/img/941583d3-fe53-4e4d-a242-62c00c2c3162.jpg' },
+    { id: 10, name: 'Яблочный Сад', price: 780, type: 'Фруктовый', description: 'Травяной чай с сушеными яблоками и корицей', image: '/img/941583d3-fe53-4e4d-a242-62c00c2c3162.jpg' }
   ];
 
   const giftSets = [
@@ -323,7 +327,7 @@ const Index = () => {
           </div>
 
           <Tabs defaultValue="all" className="w-full">
-            <TabsList className="grid w-full grid-cols-7 mb-12">
+            <TabsList className="grid w-full grid-cols-8 mb-12">
               <TabsTrigger value="all">Все</TabsTrigger>
               <TabsTrigger value="Черный">Черный</TabsTrigger>
               <TabsTrigger value="Зеленый">Зеленый</TabsTrigger>
@@ -331,6 +335,7 @@ const Index = () => {
               <TabsTrigger value="Белый">Белый</TabsTrigger>
               <TabsTrigger value="Пуэр">Пуэр</TabsTrigger>
               <TabsTrigger value="Травяной">Травяной</TabsTrigger>
+              <TabsTrigger value="Фруктовый">Фруктовый</TabsTrigger>
             </TabsList>
 
             <TabsContent value="all" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -368,7 +373,7 @@ const Index = () => {
               ))}
             </TabsContent>
 
-            {['Черный', 'Зеленый', 'Улун', 'Белый', 'Пуэр', 'Травяной'].map((type) => (
+            {['Черный', 'Зеленый', 'Улун', 'Белый', 'Пуэр', 'Травяной', 'Фруктовый'].map((type) => (
               <TabsContent key={type} value={type} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {teas.filter(tea => tea.type === type).map((tea) => (
                   <Card key={tea.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
