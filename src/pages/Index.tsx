@@ -4,10 +4,23 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import Icon from '@/components/ui/icon';
 
 const Index = () => {
   const [cart, setCart] = useState([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [orderForm, setOrderForm] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    address: '',
+    paymentMethod: 'card'
+  });
+  const [showOrderForm, setShowOrderForm] = useState(false);
 
   const teas = [
     { id: 1, name: 'Эрл Грей Премиум', price: 890, type: 'Черный', description: 'Классический английский чай с бергамотом', image: '/img/8a2a86b9-c026-4aaa-a89b-ffdd5826e84d.jpg' },
@@ -30,6 +43,47 @@ const Index = () => {
     { id: 3, name: 'Елена С.', rating: 4, text: 'Хороший ассортимент и быстрая доставка. Буду заказывать еще.' }
   ];
 
+  const addToCart = (item, type = 'tea') => {
+    const cartItem = {
+      ...item,
+      cartId: Date.now() + Math.random(),
+      type,
+      quantity: 1
+    };
+    setCart([...cart, cartItem]);
+  };
+
+  const removeFromCart = (cartId) => {
+    setCart(cart.filter(item => item.cartId !== cartId));
+  };
+
+  const updateQuantity = (cartId, newQuantity) => {
+    if (newQuantity === 0) {
+      removeFromCart(cartId);
+      return;
+    }
+    setCart(cart.map(item => 
+      item.cartId === cartId ? { ...item, quantity: newQuantity } : item
+    ));
+  };
+
+  const getTotalPrice = () => {
+    return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  };
+
+  const getTotalItems = () => {
+    return cart.reduce((sum, item) => sum + item.quantity, 0);
+  };
+
+  const handleOrderSubmit = (e) => {
+    e.preventDefault();
+    alert(`Заказ оформлен!\n\nСпособ оплаты: ${orderForm.paymentMethod === 'card' ? 'Банковская карта' : orderForm.paymentMethod === 'cash' ? 'Наличные' : 'СБП'}\nИтого: ${getTotalPrice()} ₽`);
+    setCart([]);
+    setIsCartOpen(false);
+    setShowOrderForm(false);
+    setOrderForm({ name: '', phone: '', email: '', address: '', paymentMethod: 'card' });
+  };
+
 
 
   return (
@@ -49,10 +103,183 @@ const Index = () => {
               <a href="#reviews" className="text-green-700 hover:text-green-900 transition-colors">Отзывы</a>
               <a href="#contacts" className="text-green-700 hover:text-green-900 transition-colors">Контакты</a>
             </nav>
-            <div className="flex items-center space-x-4">
-              <Icon name="ShoppingCart" size={24} className="text-green-700" />
-              <Badge variant="secondary">{cart.length}</Badge>
-            </div>
+            <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
+              <SheetTrigger asChild>
+                <div className="flex items-center space-x-2 cursor-pointer hover:bg-green-50 p-2 rounded-lg transition-colors">
+                  <Icon name="ShoppingCart" size={24} className="text-green-700" />
+                  <Badge variant="secondary" className="bg-green-700 text-white">{getTotalItems()}</Badge>
+                </div>
+              </SheetTrigger>
+              <SheetContent className="w-[400px] sm:w-[540px]">
+                <SheetHeader>
+                  <SheetTitle className="text-green-800">Корзина</SheetTitle>
+                </SheetHeader>
+                <div className="mt-6 space-y-4">
+                  {cart.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-16 text-green-600">
+                      <Icon name="ShoppingCart" size={64} className="mb-4" />
+                      <p>Корзина пуста</p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="space-y-4 max-h-96 overflow-y-auto">
+                        {cart.map((item) => (
+                          <Card key={item.cartId} className="p-4">
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1">
+                                <h4 className="font-semibold text-green-800">{item.name}</h4>
+                                <p className="text-green-600">{item.price} ₽ за шт.</p>
+                                <div className="flex items-center space-x-2 mt-2">
+                                  <Button 
+                                    size="sm" 
+                                    variant="outline" 
+                                    onClick={() => updateQuantity(item.cartId, item.quantity - 1)}
+                                    className="w-8 h-8 p-0"
+                                  >
+                                    -
+                                  </Button>
+                                  <span className="w-8 text-center">{item.quantity}</span>
+                                  <Button 
+                                    size="sm" 
+                                    variant="outline" 
+                                    onClick={() => updateQuantity(item.cartId, item.quantity + 1)}
+                                    className="w-8 h-8 p-0"
+                                  >
+                                    +
+                                  </Button>
+                                </div>
+                              </div>
+                              <div className="text-right ml-4">
+                                <p className="font-bold text-green-800">{item.price * item.quantity} ₽</p>
+                                <Button 
+                                  size="sm" 
+                                  variant="outline" 
+                                  onClick={() => removeFromCart(item.cartId)}
+                                  className="mt-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+                                >
+                                  <Icon name="Trash2" size={14} />
+                                </Button>
+                              </div>
+                            </div>
+                          </Card>
+                        ))}
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-center text-lg font-bold">
+                          <span>Итого:</span>
+                          <span className="text-green-800">{getTotalPrice()} ₽</span>
+                        </div>
+                        
+                        {!showOrderForm ? (
+                          <Button 
+                            className="w-full bg-green-700 hover:bg-green-800" 
+                            size="lg"
+                            onClick={() => setShowOrderForm(true)}
+                          >
+                            Оформить заказ
+                          </Button>
+                        ) : (
+                          <div className="space-y-4 border-t pt-4">
+                            <h3 className="text-lg font-semibold text-green-800">Оформление заказа</h3>
+                            <form onSubmit={handleOrderSubmit} className="space-y-4">
+                              <div className="space-y-2">
+                                <Label htmlFor="name">Имя *</Label>
+                                <Input 
+                                  id="name" 
+                                  value={orderForm.name} 
+                                  onChange={(e) => setOrderForm({...orderForm, name: e.target.value})}
+                                  required 
+                                />
+                              </div>
+                              
+                              <div className="space-y-2">
+                                <Label htmlFor="phone">Телефон *</Label>
+                                <Input 
+                                  id="phone" 
+                                  value={orderForm.phone} 
+                                  onChange={(e) => setOrderForm({...orderForm, phone: e.target.value})}
+                                  required 
+                                />
+                              </div>
+                              
+                              <div className="space-y-2">
+                                <Label htmlFor="email">Email</Label>
+                                <Input 
+                                  id="email" 
+                                  type="email"
+                                  value={orderForm.email} 
+                                  onChange={(e) => setOrderForm({...orderForm, email: e.target.value})}
+                                />
+                              </div>
+                              
+                              <div className="space-y-2">
+                                <Label htmlFor="address">Адрес доставки *</Label>
+                                <Input 
+                                  id="address" 
+                                  value={orderForm.address} 
+                                  onChange={(e) => setOrderForm({...orderForm, address: e.target.value})}
+                                  required 
+                                />
+                              </div>
+                              
+                              <div className="space-y-3">
+                                <Label>Способ оплаты</Label>
+                                <RadioGroup 
+                                  value={orderForm.paymentMethod} 
+                                  onValueChange={(value) => setOrderForm({...orderForm, paymentMethod: value})}
+                                >
+                                  <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="card" id="card" />
+                                    <Label htmlFor="card" className="flex items-center space-x-2">
+                                      <Icon name="CreditCard" size={16} />
+                                      <span>Банковская карта</span>
+                                    </Label>
+                                  </div>
+                                  <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="sbp" id="sbp" />
+                                    <Label htmlFor="sbp" className="flex items-center space-x-2">
+                                      <Icon name="Smartphone" size={16} />
+                                      <span>СБП</span>
+                                    </Label>
+                                  </div>
+                                  <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="cash" id="cash" />
+                                    <Label htmlFor="cash" className="flex items-center space-x-2">
+                                      <Icon name="Banknote" size={16} />
+                                      <span>Наличные при получении</span>
+                                    </Label>
+                                  </div>
+                                </RadioGroup>
+                              </div>
+                              
+                              <div className="flex space-x-2">
+                                <Button 
+                                  type="button" 
+                                  variant="outline" 
+                                  onClick={() => setShowOrderForm(false)}
+                                  className="flex-1"
+                                >
+                                  Назад
+                                </Button>
+                                <Button 
+                                  type="submit" 
+                                  className="flex-1 bg-green-700 hover:bg-green-800"
+                                >
+                                  Оплатить {getTotalPrice()} ₽
+                                </Button>
+                              </div>
+                            </form>
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </header>
@@ -128,8 +355,10 @@ const Index = () => {
 
                         <Button 
                           size="sm"
+                          onClick={() => addToCart(tea)}
                           className="bg-green-700 hover:bg-green-800"
                         >
+                          <Icon name="ShoppingCart" size={16} className="mr-2" />
                           Купить
                         </Button>
                       </div>
@@ -217,7 +446,10 @@ const Index = () => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-3xl font-bold text-green-800">{set.price} ₽</span>
-                    <Button className="bg-green-700 hover:bg-green-800">
+                    <Button 
+                      onClick={() => addToCart(set, 'giftSet')}
+                      className="bg-green-700 hover:bg-green-800"
+                    >
                       <Icon name="ShoppingCart" size={16} className="mr-2" />
                       Купить набор
                     </Button>
