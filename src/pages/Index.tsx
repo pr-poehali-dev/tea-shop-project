@@ -513,7 +513,7 @@ const Index = () => {
             <Card className="p-6 text-center">
               <Icon name="Package" size={48} className="text-green-700 mx-auto mb-4" />
               <h4 className="text-xl font-semibold text-green-800 mb-2">По России</h4>
-              <p className="text-green-600">Почта России и СДЭК</p>
+              <p className="text-green-600">Почта России и СДЭК Boxberry</p>
               <p className="text-lg font-bold text-green-800 mt-2">от 300 ₽</p>
             </Card>
 
