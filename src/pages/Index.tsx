@@ -8,7 +8,6 @@ import Icon from '@/components/ui/icon';
 
 const Index = () => {
   const [cart, setCart] = useState([]);
-  const [giftBoxItems, setGiftBoxItems] = useState([]);
 
   const teas = [
     { id: 1, name: 'Эрл Грей Премиум', price: 890, type: 'Черный', description: 'Классический английский чай с бергамотом', image: '/img/8a2a86b9-c026-4aaa-a89b-ffdd5826e84d.jpg' },
@@ -31,19 +30,7 @@ const Index = () => {
     { id: 3, name: 'Елена С.', rating: 4, text: 'Хороший ассортимент и быстрая доставка. Буду заказывать еще.' }
   ];
 
-  const addToGiftBox = (tea) => {
-    setGiftBoxItems([...giftBoxItems, tea]);
-  };
 
-  const removeFromGiftBox = (teaId) => {
-    setGiftBoxItems(giftBoxItems.filter(item => item.id !== teaId));
-  };
-
-  const calculateGiftBoxPrice = () => {
-    const basePrice = giftBoxItems.reduce((sum, item) => sum + item.price, 0);
-    const boxPrice = 500; // Стоимость упаковки
-    return basePrice + boxPrice;
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-green-50">
@@ -58,7 +45,6 @@ const Index = () => {
             <nav className="hidden md:flex space-x-8">
               <a href="#catalog" className="text-green-700 hover:text-green-900 transition-colors">Каталог</a>
               <a href="#gifts" className="text-green-700 hover:text-green-900 transition-colors">Подарочные наборы</a>
-              <a href="#constructor" className="text-green-700 hover:text-green-900 transition-colors">Конструктор</a>
               <a href="#delivery" className="text-green-700 hover:text-green-900 transition-colors">Доставка</a>
               <a href="#reviews" className="text-green-700 hover:text-green-900 transition-colors">Отзывы</a>
               <a href="#contacts" className="text-green-700 hover:text-green-900 transition-colors">Контакты</a>
@@ -86,14 +72,14 @@ const Index = () => {
             Мир изысканного чая
           </h2>
           <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto animate-fade-in">
-            Откройте для себя премиальные чайные сорта со всего мира и создайте идеальный подарочный набор
+            Откройте для себя премиальные чайные сорта со всего мира в нашем изысканном каталоге
           </p>
           <div className="space-x-4 animate-fade-in">
             <Button size="lg" className="bg-green-700 hover:bg-green-800 text-white px-8 py-4 text-lg">
               Перейти к каталогу
             </Button>
             <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-green-700 px-8 py-4 text-lg">
-              Создать подарок
+              Подарочные наборы
             </Button>
           </div>
         </div>
@@ -139,15 +125,7 @@ const Index = () => {
                     <div className="flex justify-between items-center">
                       <span className="text-2xl font-bold text-green-800">{tea.price} ₽</span>
                       <div className="space-x-2">
-                        <Button 
-                          size="sm" 
-                          onClick={() => addToGiftBox(tea)}
-                          variant="outline"
-                          className="border-green-700 text-green-700 hover:bg-green-700 hover:text-white"
-                        >
-                          <Icon name="Gift" size={16} className="mr-2" />
-                          В набор
-                        </Button>
+
                         <Button 
                           size="sm"
                           className="bg-green-700 hover:bg-green-800"
@@ -251,100 +229,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Gift Box Constructor */}
-      <section id="constructor" className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h3 className="text-4xl font-bold text-green-800 mb-4">Конструктор подарочных наборов</h3>
-            <p className="text-xl text-green-600 max-w-2xl mx-auto">
-              Создайте уникальный подарочный набор, выбрав любимые сорта чая
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <div>
-              <h4 className="text-2xl font-bold text-green-800 mb-6">Выбранные чаи</h4>
-              <Card className="p-6 min-h-96">
-                {giftBoxItems.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-full text-green-600">
-                    <Icon name="Gift" size={64} className="mb-4" />
-                    <p className="text-lg">Начните добавлять чаи в ваш подарочный набор</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {giftBoxItems.map((item, index) => (
-                      <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div>
-                          <h5 className="font-semibold text-green-800">{item.name}</h5>
-                          <p className="text-green-600">{item.price} ₽</p>
-                        </div>
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          onClick={() => removeFromGiftBox(item.id)}
-                          className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
-                        >
-                          <Icon name="X" size={16} />
-                        </Button>
-                      </div>
-                    ))}
-                    <Separator className="my-4" />
-                    <div className="text-center">
-                      <p className="text-green-600 mb-2">Стоимость упаковки: 500 ₽</p>
-                      <p className="text-2xl font-bold text-green-800">
-                        Итого: {calculateGiftBoxPrice()} ₽
-                      </p>
-                      <Button className="mt-4 bg-green-700 hover:bg-green-800" size="lg">
-                        <Icon name="ShoppingCart" size={20} className="mr-2" />
-                        Заказать набор
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </Card>
-            </div>
-
-            <div>
-              <h4 className="text-2xl font-bold text-green-800 mb-6">Дополнительные опции</h4>
-              <Card className="p-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div>
-                      <h5 className="font-semibold text-green-800">Деревянная коробка</h5>
-                      <p className="text-green-600">+800 ₽</p>
-                    </div>
-                    <Button size="sm" variant="outline">Добавить</Button>
-                  </div>
-                  
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div>
-                      <h5 className="font-semibold text-green-800">Керамический чайник</h5>
-                      <p className="text-green-600">+1200 ₽</p>
-                    </div>
-                    <Button size="sm" variant="outline">Добавить</Button>
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div>
-                      <h5 className="font-semibold text-green-800">Набор чашек (2 шт)</h5>
-                      <p className="text-green-600">+900 ₽</p>
-                    </div>
-                    <Button size="sm" variant="outline">Добавить</Button>
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div>
-                      <h5 className="font-semibold text-green-800">Поздравительная открытка</h5>
-                      <p className="text-green-600">+150 ₽</p>
-                    </div>
-                    <Button size="sm" variant="outline">Добавить</Button>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Reviews Section */}
       <section id="reviews" className="py-20 bg-amber-50">
