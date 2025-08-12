@@ -507,7 +507,7 @@ const Index = () => {
               <Icon name="Truck" size={48} className="text-green-700 mx-auto mb-4" />
               <h4 className="text-xl font-semibold text-green-800 mb-2">По Москве</h4>
               <p className="text-green-600">Курьерская доставка в день заказа</p>
-              <p className="text-lg font-bold text-green-800 mt-2">Бесплатно</p>
+              <p className="text-lg font-bold text-green-800 mt-2"></p>
             </Card>
 
             <Card className="p-6 text-center">
